@@ -10,7 +10,8 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 
-var db = require('./models');
+mongoose.connect('mongodb://localhost/loginapp');
+var db = mongoose.connection;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -19,12 +20,12 @@ var app = express();
 
 var PORT = process.env.PORT || 3000;
 
-mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/loginapp", {
-  useMongoClient: true
-});
+// mongoose.Promise = Promise;
+// mongoose.connect("mongodb://localhost/loginapp", {
+//   useMongoClient: true
+// });
 
-app.set('views', path.join(_dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.engine('handlebars', exphbs({defaultLayout:'layout'}));
 app.set('view engine', 'handlebars');
 
@@ -32,7 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(cookieParser());
 
-app.use(express.static(path.join(_dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
   secret: 'secret',
