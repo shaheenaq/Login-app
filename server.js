@@ -10,8 +10,25 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/loginapp');
+var databaseUri = 'mongodb://localhost/loginapp';
+// mongoose.connect('mongodb://localhost/loginapp');
+
+
+if(process.env.MONGODB_URI){
+  mongoose.connect(process.env.MONGODB_URI);
+} else {
+  mongoose.connect(databaseUri);
+}
 var db = mongoose.connection;
+
+db.on('error', function(err){
+  console.log('Mongoose Error: ', err);
+});
+
+db.once('open', function(){
+  console.log('Mongoose connection successful.');
+});
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
